@@ -1,7 +1,7 @@
 // Libraries
 import React from "react";
 import { useParams } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 // Components
 import Resident from "./Resident";
@@ -9,28 +9,12 @@ import Resident from "./Resident";
 // Styles
 import styles from "./Location.module.scss";
 
-const GET_LOCATIONS_BY_ID = gql`
-  query getLocationsById($id: ID!) {
-    location(id: $id) {
-      id
-      name
-      type
-      dimension
-      residents {
-        id
-        name
-        status
-        species
-        gender
-        image
-      }
-    }
-  }
-`;
+// Utils
+import { LOCATION_BY_ID_QUERY } from "../../utils/queries";
 
 const Location = () => {
   const { locationId } = useParams();
-  const { data, loading, error } = useQuery(GET_LOCATIONS_BY_ID, {
+  const { data, loading, error } = useQuery(LOCATION_BY_ID_QUERY, {
     variables: { id: locationId },
   });
 

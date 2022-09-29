@@ -6,21 +6,11 @@ import { Link } from "react-router-dom";
 // Styles
 import styles from "./Locations.module.scss";
 
-const GET_LOCATIONS = gql`
-  query getLocations($page: Int) {
-    locations(page: $page) {
-      results {
-        id
-        name
-        type
-        dimension
-      }
-    }
-  }
-`;
+// Utils
+import { LOCATIONS_QUERY } from "../../utils/queries";
 
 const Locations = () => {
-  const { data, loading, error } = useQuery(GET_LOCATIONS);
+  const { data, loading, error } = useQuery(LOCATIONS_QUERY);
 
   const locations = data && data.locations.results;
 

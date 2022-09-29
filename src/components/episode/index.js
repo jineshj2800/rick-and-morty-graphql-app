@@ -9,28 +9,12 @@ import FeaturedCharacter from "./FeaturedCharacter";
 // Styles
 import styles from "./Episode.module.scss";
 
-const GET_EPISODES_BY_ID = gql`
-  query getEpisodes($id: ID!) {
-    episode(id: $id) {
-      id
-      name
-      episode
-      air_date
-      characters {
-        id
-        name
-        status
-        species
-        gender
-        image
-      }
-    }
-  }
-`;
+// Utils
+import { EPISODE_BY_ID_QUERY } from "../../utils/queries";
 
 const Episode = () => {
   const { episodeId } = useParams();
-  const { data, loading, error } = useQuery(GET_EPISODES_BY_ID, {
+  const { data, loading, error } = useQuery(EPISODE_BY_ID_QUERY, {
     variables: { id: episodeId },
   });
 

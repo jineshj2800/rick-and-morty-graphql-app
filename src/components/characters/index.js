@@ -8,23 +8,10 @@ import CharacterDetails from "./CharacterDetails";
 // Styles
 import styles from "./Characters.module.scss";
 
-const GET_CHARACTERS = gql`
-  query getCharacters($page: Int) {
-    characters(page: $page) {
-      results {
-        id
-        name
-        status
-        species
-        gender
-        image
-      }
-    }
-  }
-`;
+import { CHARACTERS_QUERY } from "../../utils/queries";
 
 const Characters = () => {
-  const { data, loading, error } = useQuery(GET_CHARACTERS);
+  const { data, loading, error } = useQuery(CHARACTERS_QUERY);
 
   const characters = data && data.characters.results;
 

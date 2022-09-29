@@ -6,21 +6,11 @@ import { Link } from "react-router-dom";
 // Styles
 import styles from "./Episodes.module.scss";
 
-const GET_EPISODES = gql`
-  query getEpisodes($page: Int) {
-    episodes(page: $page) {
-      results {
-        id
-        name
-        air_date
-        episode
-      }
-    }
-  }
-`;
+// Utils
+import { EPISODES_QUERY } from "../../utils/queries";
 
 const Episodes = () => {
-  const { data, loading, error } = useQuery(GET_EPISODES);
+  const { data, loading, error } = useQuery(EPISODES_QUERY);
 
   const episodes = data && data.episodes.results;
 

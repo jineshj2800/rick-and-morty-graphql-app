@@ -7,34 +7,12 @@ import { useQuery, gql } from "@apollo/client";
 // Styles
 import styles from "./Character.module.scss";
 
-const GET_CHARACTER_BY_ID = gql`
-  query getCharacterById($id: ID!) {
-    character(id: $id) {
-      id
-      name
-      status
-      species
-      gender
-      image
-      origin {
-        name
-      }
-      location {
-        name
-      }
-      episode {
-        id
-        name
-        episode
-        air_date
-      }
-    }
-  }
-`;
+// Utils
+import { CHARACTER_BY_ID_QUERY } from "../../utils/queries";
 
 const Character = () => {
   const { characterId } = useParams();
-  const { data, loading, error } = useQuery(GET_CHARACTER_BY_ID, {
+  const { data, loading, error } = useQuery(CHARACTER_BY_ID_QUERY, {
     variables: { id: characterId },
   });
 
