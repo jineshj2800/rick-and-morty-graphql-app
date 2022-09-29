@@ -2,18 +2,44 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
-// Hooks
-import { useCharacterDataById } from "./useCharacterDataById";
-import { useEpisodesByApi } from "../../hooks/useEpisodeByApi";
+import { useQuery, gql } from "@apollo/client";
 
 // Styles
 import styles from "./Character.module.scss";
 
+const GET_CHARACTER_BY_ID = gql`
+  query getCharacterById($id: ID!) {
+    character(id: $id) {
+      id
+      name
+      status
+      species
+      gender
+      image
+      origin {
+        name
+      }
+      location {
+        name
+      }
+      episode {
+        id
+        name
+        episode
+        air_date
+      }
+    }
+  }
+`;
+
 const Character = () => {
   const { characterId } = useParams();
-  const { character } = useCharacterDataById(characterId);
-  const { episodes } = useEpisodesByApi(character && character.episode);
+  const { data, loading, error } = useQuery(GET_CHARACTER_BY_ID, {
+    variables: { id: characterId },
+  });
+
+  const character = data && data.character;
+  const episodes = character && character.episode;
 
   return (
     character && (

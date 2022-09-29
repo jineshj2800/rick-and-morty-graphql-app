@@ -1,23 +1,41 @@
 // Libraries
 import React from "react";
 import { useParams } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 
 // Components
 import Resident from "./Resident";
 
-// Hooks
-import { useLocationDataById } from "./useLocationDataById";
-import { useCharacterByApi } from "../../hooks/useCharacterByApi";
-
 // Styles
 import styles from "./Location.module.scss";
 
+const GET_LOCATIONS_BY_ID = gql`
+  query getLocationsById($id: ID!) {
+    location(id: $id) {
+      id
+      name
+      type
+      dimension
+      residents {
+        id
+        name
+        status
+        species
+        gender
+        image
+      }
+    }
+  }
+`;
+
 const Location = () => {
   const { locationId } = useParams();
-  const { location } = useLocationDataById(locationId);
-  const { characters: residents } = useCharacterByApi(
-    location && location.residents
-  );
+  const { data, loading, error } = useQuery(GET_LOCATIONS_BY_ID, {
+    variables: { id: locationId },
+  });
+
+  const location = data && data.location;
+  const residents = location && location.residents;
 
   return (
     location && (

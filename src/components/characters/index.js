@@ -1,5 +1,6 @@
 // Libraries
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
 
 // Components
 import CharacterDetails from "./CharacterDetails";
@@ -7,19 +8,25 @@ import CharacterDetails from "./CharacterDetails";
 // Styles
 import styles from "./Characters.module.scss";
 
-const Characters = () => {
-  const [characters, setCharacters] = useState();
+const GET_CHARACTERS = gql`
+  query getCharacters($page: Int) {
+    characters(page: $page) {
+      results {
+        id
+        name
+        status
+        species
+        gender
+        image
+      }
+    }
+  }
+`;
 
-  useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/character")
-      .then((response) => response.ok && response.json())
-      .then((data) => {
-        setCharacters(data.results);
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }, []);
+const Characters = () => {
+  const { data, loading, error } = useQuery(GET_CHARACTERS);
+
+  const characters = data && data.characters.results;
 
   return (
     <div className={styles.mainContainer}>

@@ -1,23 +1,28 @@
 // Libraries
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
 
 // Styles
 import styles from "./Episodes.module.scss";
 
-const Episodes = () => {
-  const [episodes, setEpisodes] = useState();
+const GET_EPISODES = gql`
+  query getEpisodes($page: Int) {
+    episodes(page: $page) {
+      results {
+        id
+        name
+        air_date
+        episode
+      }
+    }
+  }
+`;
 
-  useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/episode")
-      .then((response) => response.ok && response.json())
-      .then((data) => {
-        setEpisodes(data.results);
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }, []);
+const Episodes = () => {
+  const { data, loading, error } = useQuery(GET_EPISODES);
+
+  const episodes = data && data.episodes.results;
 
   return (
     <div className={styles.container}>

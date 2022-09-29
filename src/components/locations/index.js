@@ -1,23 +1,28 @@
 // Libraries
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
 
 // Styles
 import styles from "./Locations.module.scss";
 
-const Locations = () => {
-  const [locations, setLocations] = useState();
+const GET_LOCATIONS = gql`
+  query getLocations($page: Int) {
+    locations(page: $page) {
+      results {
+        id
+        name
+        type
+        dimension
+      }
+    }
+  }
+`;
 
-  useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/location")
-      .then((response) => response.ok && response.json())
-      .then((data) => {
-        setLocations(data.results);
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }, []);
+const Locations = () => {
+  const { data, loading, error } = useQuery(GET_LOCATIONS);
+
+  const locations = data && data.locations.results;
 
   return (
     <div className={styles.container}>
@@ -41,11 +46,6 @@ const Locations = () => {
                 </Link>
               );
             })}
-          <li>
-            <span>Earth</span>
-            <span>Planet</span>
-            <span>Dimension C-137</span>
-          </li>
         </ul>
       </div>
     </div>
